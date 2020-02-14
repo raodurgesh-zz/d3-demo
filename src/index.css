@@ -1,0 +1,25 @@
+.node {
+  fill: steelblue;
+  stroke: black;
+}
+
+path {
+  fill: none;
+  stroke: black;
+}
+
+marker path {
+  fill: #000;
+  stroke-width: 1px;
+}
+
+.links {
+  stroke: rgba(0, 0, 0, 0.651);
+  cursor: pointer;
+}
+
+.connector_bg {
+  stroke: #ccc;
+  stroke-dasharray: 5;
+  stroke-width: 1px;
+}
