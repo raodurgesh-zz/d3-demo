@@ -121,40 +121,43 @@ function renderNodes(_nodes) {
     });
 }
 
+function pathString(l) {
+  let nsid = data.nodes.filter(n => n.id == l.source)[0].id;
+  let ndid = data.nodes.filter(n => n.id == l.target)[0].id;
+
+  let source = select("#" + nsid);
+  let dest = select("#" + ndid);
+
+  let sCord = source.node().getBoundingClientRect();
+  let dCord = dest.node().getBoundingClientRect();
+
+  let sCTM = source.node().getCTM();
+  let dCTML = dest.node().getCTM();
+
+  let sData = source.datum();
+  let dData = dest.datum();
+
+  var lineFunction = linkHorizontal()
+    .x(d => d.x)
+    .y(d => d.y);
+
+  sCord = {
+    x: sCTM.e + (sData.left ? sCord.width : 0),
+    y: sCTM.f + sCord.height / 2
+  };
+
+  dCord = {
+    x: dCTML.e + (dData.left ? dCord.width : 0),
+    y: dCTML.f + dCord.height / 2
+  };
+
+  return lineFunction({
+    source: { x: sCord.x, y: sCord.y },
+    target: { x: dCord.x, y: dCord.y }
+  });
+}
+
 function renderLinks(links) {
-  function pathString(l) {
-    let nsid = data.nodes.filter(n => n.id == l.source)[0].id;
-    let ndid = data.nodes.filter(n => n.id == l.target)[0].id;
-
-    let source = select("#" + nsid);
-    let dest = select("#" + ndid);
-
-    let sCord = source.node().getBoundingClientRect();
-    let dCord = dest.node().getBoundingClientRect();
-
-    let sData = source.datum();
-    let dData = dest.datum();
-
-    var lineFunction = linkHorizontal() // @temp-fix : ramdom 8px margin fix.
-      .x(d => d.x - 8)
-      .y(d => d.y - 8);
-
-    sCord = {
-      x: sCord.x + (sData.left ? sCord.width : 0),
-      y: sCord.y + sCord.height / 2
-    };
-
-    dCord = {
-      x: dCord.x + (dData.left ? dCord.width : 0),
-      y: dCord.y + dCord.height / 2
-    };
-
-    return lineFunction({
-      source: { x: sCord.x, y: sCord.y },
-      target: { x: dCord.x, y: dCord.y }
-    });
-  }
-
   createPathMarker();
 
   svg

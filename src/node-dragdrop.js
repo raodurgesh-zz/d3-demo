@@ -11,9 +11,9 @@ let svg = select("svg")
 
 const dragHandler = drag()
   .on("start", function() {
-    var cord = this.getBoundingClientRect();
-    deltaX = cord.x - event.x;
-    deltaY = cord.y - event.y;
+    var cord = this.getCTM();
+    deltaX = cord.e - event.x;
+    deltaY = cord.f - event.y;
   })
   .on("drag", function(n) {
     lineShape = null;
@@ -161,21 +161,24 @@ function pathString(l) {
   let sCord = source.node().getBoundingClientRect();
   let dCord = dest.node().getBoundingClientRect();
 
+  let sCTM = source.node().getCTM();
+  let dCTML = dest.node().getCTM();
+
   let sData = source.datum();
   let dData = dest.datum();
 
-  var lineFunction = linkHorizontal() // @temp-fix : ramdom 8px margin fix.
-    .x(d => d.x - 8)
-    .y(d => d.y - 8);
+  var lineFunction = linkHorizontal()
+    .x(d => d.x)
+    .y(d => d.y);
 
   sCord = {
-    x: sCord.x + (sData.left ? sCord.width : 0),
-    y: sCord.y + sCord.height / 2
+    x: sCTM.e + (sData.left ? sCord.width : 0),
+    y: sCTM.f + sCord.height / 2
   };
 
   dCord = {
-    x: dCord.x + (dData.left ? dCord.width : 0),
-    y: dCord.y + dCord.height / 2
+    x: dCTML.e + (dData.left ? dCord.width : 0),
+    y: dCTML.f + dCord.height / 2
   };
 
   return lineFunction({
